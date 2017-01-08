@@ -5,8 +5,8 @@ var Alexa = require('alexa-sdk');
 //var ical = require('ical');
 var http = require('http');
 var utils = require('util');
-const fs = require('fs');
-const got = require('got');
+var fs = require('fs');
+var request = require('request');
 
 var states = {
     EMERGENCYCALLMODE: '_EMERGENCYCALLMODE',
@@ -50,10 +50,10 @@ var newSessionHandlers = {
         this.handler.state = states.HAVINGEMERGENCYMODE;
         this.emit(':ask',welcomeMessage, welcomeMessage);
     },
-/*
+
     'Unhandled': function () {
         this.emit(':ask', HelpMessage, HelpMessage);
-    },*/
+    },
 };
 
 
@@ -112,26 +112,42 @@ var desicion1Handlers = Alexa.CreateStateHandler(states.DESICIONMODE1, {
 
         // GET to call 911---------------------------------------------------------------------
 
-        var llamar = null;
-        got('http://199.195.116.177/alexaHack/alexa_post.php?llamar=true');
 
+        console.log("Before");
+        request.post('http://199.195.116.177/alexaHack/alexa_post.php', {form:{llamar: true}});
+        console.log("After");
+        request('http://199.195.116.177/alexaHack/alexa_post.php',{form:{llamar: false}}, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body)
+                var yesResponse = "I will call to emergency, please don't move the help is on way.";
+                this.emit(':tell', yesResponse);// Show the HTML for the Google homepage.
+            }else{
+                var yesResponse = "Sorry i can make the call.";
+                this.emit(':tell', yesResponse);// Show the HTML for the Google homepage.
+            }
 
-        var noResponse = "I will call to emergency, please don't move the help is on way.";
-        this.emit(':tell', noResponse);
-        //got('http://199.195.116.177/alexaHack/alexa_post.php?llamar=true');
+        })
     },
 
     'AMAZON.YesIntent': function () {
 
         // cancel to call 911---------------------------------------------------------------------
+        console.log("Before");
+        request.post('http://199.195.116.177/alexaHack/alexa_post.php', {form:{llamar: false}});
+        console.log("After");
+        request('http://199.195.116.177/alexaHack/alexa_post.php',{form:{llamar: false}}, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body)
+                var yesResponse = "Thank you for traying the personal health care asistans. Have a nice day!.";
+                this.emit(':tell', yesResponse);// Show the HTML for the Google homepage.
+            }else{
+                var yesResponse = "Sorry i can make the call.";
+                this.emit(':tell', yesResponse);// Show the HTML for the Google homepage.
+            }
 
-        var llamar = null;
-        got('http://199.195.116.177/alexaHack/alexa_post.php?llamar=false');
+        })
 
 
-        var yesResponse = "Thank you for traying the personal health care asistans. Have a nice day!.";
-        this.emit(':tell', yesResponse);
-        //got('http://199.195.116.177/alexaHack/alexa_post.php?llamar=false');
     },
 
     'SessionEndedRequest': function () {
@@ -184,9 +200,9 @@ var havingEmergencyHandlers = Alexa.CreateStateHandler(states.HAVINGEMERGENCYMOD
 // Create a new handler object for DESICIONMODE2 state
 var desicion2Handlers;
 desicion2Handlers = Alexa.CreateStateHandler(states.DESICIONMODE2, {
-    /*'AMAZON.HelpIntent': function () {
+    'AMAZON.HelpIntent': function () {
          this.emit(':ask', descriptionStateHelpMessage, descriptionStateHelpMessage);
-         },*/
+         },
 
     'AMAZON.StopIntent': function () {
         this.emit(':tell', killSkillMessage);
@@ -199,23 +215,43 @@ desicion2Handlers = Alexa.CreateStateHandler(states.DESICIONMODE2, {
     'AMAZON.NoIntent': function () {
 
         // cancel to call 911---------------------------------------------------------------------
-        var llamar = null;
-        got('http://199.195.116.177/alexaHack/alexa_post.php?llamar=false');
 
-        var noResponse = "Thank you for traying the personal health care asistans. Have a nice day!.";
-        this.emit(':tell', noResponse);
-        //got('http://199.195.116.177/alexaHack/alexa_post.php?llamar=false');
+        console.log("Before");
+        request.post('http://199.195.116.177/alexaHack/alexa_post.php', {form:{llamar: false}});
+        console.log("After");
+        request('http://199.195.116.177/alexaHack/alexa_post.php',{form:{llamar: false}}, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body)
+                var yesResponse = "Thank you for traying the personal health care asistans. Have a nice day!.";
+                this.emit(':tell', yesResponse);// Show the HTML for the Google homepage.
+            }else{
+                var yesResponse = "Sorry i can make the call.";
+                this.emit(':tell', yesResponse);// Show the HTML for the Google homepage.
+            }
+
+        })
+
     },
 
     'AMAZON.YesIntent': function () {
             // GET to call 911---------------------------------------------------------------------
-            var llamar = null;
-            got("http://199.195.116.177/alexaHack/alexa_post.php?llamar=true");
-    
 
-            var yesResponse = "I will call to emergency, please don't move the help is on way.";
-            this.emit(':tell', yesResponse);
-            //got('http://199.195.116.177/alexaHack/alexa_post.php?llamar=true');
+        console.log("Before");
+        request.post('http://199.195.116.177/alexaHack/alexa_post.php', {form:{llamar: true}});
+        console.log("After");
+        request('http://199.195.116.177/alexaHack/alexa_post.php',{form:{llamar: false}}, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body)
+                var yesResponse = "I will call to emergency, please don't move the help is on way.";
+                this.emit(':tell', yesResponse);// Show the HTML for the Google homepage.
+            }else{
+                var yesResponse = "Sorry i can make the call.";
+                this.emit(':tell', yesResponse);// Show the HTML for the Google homepage.
+            }
+
+        })
+
+            
         },
 
     'SessionEndedRequest': function () {
@@ -234,4 +270,5 @@ exports.handler = function (event, context, callback) {
     alexa.registerHandlers(newSessionHandlers, havingEmergencyHandlers, emergencyCallHandlers,desicion1Handlers,desicion2Handlers);
     alexa.execute();
 };
+
 
