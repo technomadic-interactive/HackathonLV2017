@@ -1,0 +1,13 @@
+GetEmergencyCall i am fine
+GetEmergencyCall i'm fine
+GetEmergencyCall i am ok
+GetEmergencyCall i'm ok
+GetEmergencyCall stop the call to emergency
+
+
+HavingEmergency call to emergency
+HavingEmergency I'm having a heart attack
+HavingEmergency I am having a heart attack
+HavingEmergency call to the hospital
+HavingEmergency i don't fill good call to emergency
+HavingEmergency i do not fill good call to emergency
