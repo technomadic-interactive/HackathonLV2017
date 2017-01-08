@@ -6,8 +6,8 @@
     $auth_token = "xxxxxxxx";
     $p = new RestAPI($auth_id, $auth_token);
     $params = array(
-        'to' => '17864540964',   # The phone numer to which the call will be placed
-        'from' => '14089098523', # The phone number to be used as the caller id
+        'to' => 'xxxxxxx',   # The phone numer to which the call will be placed
+        'from' => 'xxxxxxx', # The phone number to be used as the caller id
 
         # answer_url is the URL invoked by Plivo when the outbound call is answered
         # and contains instructions telling Plivo what to do with the call
